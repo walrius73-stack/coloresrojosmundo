@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para ti ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        /* PANTALLA INICIAL */
+        #inicio {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: opacity 1.2s ease;
+            z-index: 10;
+        }
+
+        /* IMAGEN */
+        #imagen {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* TEXTO */
+        #mensaje {
+            position: absolute;
+            bottom: 7%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            text-align: center;
+            text-shadow: 0 2px 8px #000;
+            opacity: 0.9;
+            width: 90%;
+        }
+
+        /* VIDEO */
+        #video {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA INICIAL -->
+    <div id="inicio" onclick="comenzar()">
+        <img id="imagen" src="imagen-inicio.jpg" alt="Para ti">
+        <div id="mensaje">Toca la pantalla ❤️</div>
+    </div>
+
+    <!-- CANCIÓN -->
+    <audio id="musica" loop>
+        <source src="corazon-atomico.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- VIDEO (Se añadió playsinline para iOS y muted por si prefieres que la música reine, quita muted si el video tiene su propio audio esencial) -->
+    <video id="video" playsinline controls>
+        <source src="video-sorpresa.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        function comenzar() {
+            const inicio = document.getElementById("inicio");
+            const musica = document.getElementById("musica");
+            const video = document.getElementById("video");
+
+            // Evitar múltiples clics mientras transiciona
+            inicio.style.pointerEvents = "none";
+
+            // 1. Reproducir música
+            musica.play().catch(error => {
+                console.log("No se pudo reproducir la canción:", error);
+            });
+
+            // 2. Desvanecer pantalla inicial
+            inicio.style.opacity = "0";
+
+            // 3. Transición limpia basada en el evento de desvanecimiento de CSS
+            setTimeout(() => {
+                inicio.style.display = "none";
+                video.style.display = "block";
+
+                // Opcional: si quieres que la música se detenga al empezar el video para que no se encimen:
+                // musica.pause();
+
+                video.play().catch(error => {
+                    console.log("El video necesita interacción:", error);
+                });
+            }, 1200); // Coincide con los 1.2s de la transición CSS
+        }
+    </script>
+</body>
+</html>
