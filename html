@@ -16,9 +16,54 @@
             height: 100%;
             background: #000;
             overflow: hidden;
+            font-family: Arial, sans-serif;
         }
 
-        /* PANTALLA PRINCIPAL */
+        /* PANTALLA DE TRANSICIÓN (POEMA) */
+        #transicion {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a000d, #000000);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+            transition: opacity 1s ease;
+        }
+
+        #poema-texto {
+            color: #ffb3d1;
+            font-size: 19px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 10px rgba(255, 0, 100, 0.4);
+        }
+
+        /* BOTÓN PARA ABRIR */
+        #btn-abrir {
+            background-color: #ff3366;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.4);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        #btn-abrir:hover {
+            background-color: #ff1a4d;
+            transform: scale(1.05);
+        }
+
+        /* PANTALLA PRINCIPAL (IMAGEN Y MÚSICA) */
         #inicio {
             position: fixed;
             inset: 0;
@@ -29,6 +74,10 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1s ease;
+            z-index: 5;
         }
 
         /* IMAGEN */
@@ -38,14 +87,13 @@
             object-fit: contain;
         }
 
-        /* TEXTO */
+        /* TEXTO DE TOQUE */
         #mensaje {
             position: absolute;
             bottom: 7%;
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            font-family: Arial, sans-serif;
             font-size: 20px;
             text-align: center;
             text-shadow: 0 2px 8px #000;
@@ -56,8 +104,16 @@
 </head>
 <body>
 
-    <!-- PANTALLA INICIAL E IMAGEN -->
-    <div id="inicio" onclick="comenzar()">
+    <!-- PANTALLA DE TRANSICIÓN CON EL POEMA -->
+    <div id="transicion">
+        <div id="poema-texto">
+            Mi sol, mi tierra y vida, iluminas el alba y das color a la sangre que me da motor para darte mi amor, mi rubí carmesí, me pierdo en ti y en las fresas de amor que emanan de tu mirada.
+        </div>
+        <button id="btn-abrir" onclick="revelarSorpresa()">Abrir ❤️</button>
+    </div>
+
+    <!-- PANTALLA PRINCIPAL E IMAGEN -->
+    <div id="inicio" onclick="tocarPantalla()">
         <img id="imagen" src="imagen.jpeg" alt="Para ti">
         <div id="mensaje">Toca la pantalla ❤️</div>
     </div>
@@ -68,15 +124,28 @@
     </audio>
 
     <script>
-        function comenzar() {
+        function revelarSorpresa() {
+            const transicion = document.getElementById("transicion");
+            const inicio = document.getElementById("inicio");
             const musica = document.getElementById("musica");
-            const mensaje = document.getElementById("mensaje");
 
-            // Reproducir la canción
+            // Reproducir la música desde el botón del poema
             musica.play().catch(error => {
                 console.log("No se pudo reproducir la canción:", error);
             });
 
+            // Desvanecer la pantalla del poema
+            transicion.style.opacity = "0";
+            setTimeout(() => {
+                transicion.style.display = "none";
+                // Mostrar la pantalla de la imagen
+                inicio.style.visibility = "visible";
+                inicio.style.opacity = "1";
+            }, 1000);
+        }
+
+        function tocarPantalla() {
+            const mensaje = document.getElementById("mensaje");
             // Ocultar el texto de "Toca la pantalla" al hacer clic
             mensaje.style.display = "none";
         }
